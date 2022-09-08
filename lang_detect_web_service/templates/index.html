@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <!-- jquery 설치 완료 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- js 프레임웍(jQuery)을 이용하여 입력된 텍스트를 서버로 전송하는 기능 구현 -->
+    <!-- jQuery 선택 이유, 간결하게 html(DOM) 조작, 서버통신 등 많은 기능 제공, 생산성 향상 -->
+    <div>
+        <fieldset>
+
+            <textarea cols="40" rows="15" id="userInput">
+                병합 충돌 해결 : 동일한 분기의 다른 사용자와 공동 작업하는 경우 변경 내용을 푸시할 때 병합 충돌이 발생할 수 있습니다.
+            </textarea>
+            <br>
+            <button id="detectBtn">언어감지</button>
+            <br>
+            <p>결과:<span id="result"></span></p>
+
+        </fieldset>
+    </div>
+    <script>
+        // 화면에 보이는 모든 코드의 랜더링이 끝난 지점. body가 닫히기 직전
+        // 1. 버튼을 누른다. -> 그 이벤트를 잡는다. = 버튼에 클릭 이벤트를 등록(on())하라
+        // 1-1 버튼을 특정하라(찾아라) -> #detectBtn, jquery에서는 $('css selector') 표현
+        // console.log($('#detectBtn')) // like print() : 콘솔에서 확인
+        // function callback()
+        // {
+        //     console.log('호출')
+        // }
+        // 버튼을 클릭하면 이벤트를 잡아서 핸들러(등록된 함수(콜백)를 호출), 호출이라는 문자열이 출력된다.
+        // $('#detectBtn').on('click', function () {
+            $('#detectBtn').on('click', () => { // 화살함수 간결
+            // 1. 사용자가 입력한 텍스트를 추출 -> 특정 후 추출
+            let src = $('#userInput').val()
+            console.log(src)
+            // 2. 해당 텍스트를 서버측으로 전송(서버주소, 전송방식(post:양많아서), 응답형태(json))
+            //    지금은 홈페이지 뿐, 서버 없음
+            //    비동기 백그라운드 통신 방식으로 전송(ajax:화면에 깜빡임 없음)
+            $.post({
+                url:'/predict',     // 서버측 주소
+                data:'key='+src,    // 전달할 데이터 키=값%키=값...
+                dataType:'json',    // 응답 데이터는 json으로 전달해라(포맷지정)
+                success:(res)=>{    // 통신이 성공하면 결과를 res에 담아서 콜백함수를 호출한다.
+                    // 3. 결과를 화면에 표시하시오. -> 이 글은 한국어 입니다.
+                    console.log('성공', res)
+                    $('#result').html(`이 글은 ${res.value}입니다.`)
+                },
+                error: (err) => {   // 통신오류 404, 405
+                    console.log('오류', err)
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
