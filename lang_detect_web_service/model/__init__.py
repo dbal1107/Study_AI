@@ -1,3 +1,6 @@
+# 번역서비스에서 제공되는 언어감지기능을 머신러닝 딥러닝으로 구현 전체개발플로우(절차)이해.ipynb
+# https://colab.research.google.com/drive/1SntOzsfLzLstU6pyHqpHUiadx-dhNzVa?usp=sharing
+
 import joblib
 import pandas as pd
 import numpy as np
