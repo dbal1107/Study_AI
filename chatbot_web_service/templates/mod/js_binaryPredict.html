@@ -1,0 +1,111 @@
+<!-- jQuery -->
+<script src="/static/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="/static/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="/static/plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="/static/plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="/static/plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="/static/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="/static/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="/static/plugins/moment/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="/static/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="/static/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="/static/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/static/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/static/dist/js/pages/dashboard.js"></script>
+
+<script>
+// 채팅창을 비운다
+$('#chat_msg_body').empty()
+
+// TODO 8 키프레스 이벤트
+$('#userMsg').on('keypress', e=>{
+  if(e.keyCode == 13){// enter
+    // console.log(e)
+    // send 버튼에게 강제로 클릭이벤트 발생시킴 = 트리거
+    $('#sendBtn').trigger('click')
+  }
+})
+
+// TODO 4 사용자가 문의 사항을 작성하고 send 버튼을 클릭하거나 엔터를 누른다.
+$('#sendBtn').on('click', ()=>{
+  // alert('문의사항 전송')
+  
+  //TODO 5 클라이언트 문의 요청 화면 처리
+  // 입력창에 내용 추출
+  let msg = $('#userMsg').val()
+  // 입력창에 내용 삭제
+  $('#userMsg').val('')
+  // 문의 사항은 채팅창에 추가된다 -> 먼저 처리 가능
+  $('#chat_msg_body').append(`
+  <div class="direct-chat-msg right">
+      <div class="direct-chat-infos clearfix">
+          <span class="direct-chat-name float-right">게스트</span>
+          <span class="direct-chat-timestamp float-left">${new Date()}</span>
+      </div>
+      <!-- /.direct-chat-infos -->
+      <img class="direct-chat-img" src="/static/dist/img/user3-128x128.jpg"
+          alt="message user image">
+      <!-- /.direct-chat-img -->
+      <div class="direct-chat-text">
+          ${msg}
+      </div>
+      <!-- /.direct-chat-text -->
+  </div>
+
+  `)
+
+  // TODO 6 ajax 코드 붙여놓기
+  $.post({
+      url: '/binaryPredict',     // 서버측 주소
+      data: 'msg=' +msg,    // 전달할 데이터 키=값%키=값... 변수에 받아서 넣음
+      // ---------------------------
+      dataType: 'json',    // 응답 데이터는 json으로 전달해라(포맷지정)
+      success: (res) => {    // 통신이 성공하면 결과를 res에 담아서 콜백함수를 호출한다.
+        // 3. 결과를 화면에 표시하시오. -> 이 글은 한국어 입니다.
+        console.log('성공', res)
+        //$('#result').html(`이 글은 ${res.value}입니다.`)
+        // TODO 7 답변 화면처리
+        $('#chat_msg_body').append(`
+          <div class="direct-chat-msg">
+              <div class="direct-chat-infos clearfix">
+                  <span class="direct-chat-name float-left">${res.name}</span>
+                  <span class="direct-chat-timestamp float-right">${new Date()}</span>
+              </div>
+              <!-- /.direct-chat-infos -->
+              <img class="direct-chat-img" src="/static/dist/img/user1-128x128.jpg"
+                  alt="message user image">
+              <!-- /.direct-chat-img -->
+              <div class="direct-chat-text">
+                  예측 : ${res.msg.label == 'LABEL_1' ? "긍정" : "부정"} 확률 : ${res.msg.score}
+              </div>
+              <!-- /.direct-chat-text -->
+          </div>
+        `)
+        document.querySelector('#chat_msg_body').scrollBy(0, 1000)
+      },
+      error: (err) => {   // 통신오류 404, 405
+        console.log('오류', err)
+      }
+    })
+})
+</script>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% include "mod/head.html" %}
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- 클라이언트도 볼 수 있는 주석 -->
+    {# 주석:개발자만 볼 수 있는 주석 #}
+
+    {% include "mod/loading.html" %}
+    {% include "mod/nav.html" %}
+    {% include "mod/left.html" %}
+
+    <!-- {# include "mod/index_contents.html" #} -->
+    {% include "mod/binaryPredict_contents.html" %}
+    {% include "mod/footer.html" %}
+    {% include "mod/right.html" %}
+  </div>
+  <!-- ./wrapper -->
+  {% include "mod/js_binaryPredict.html" %}
+</body>
+
+</html>

@@ -21,5 +21,19 @@ def query():
     }
     return jsonify(res)
 
+@app.route('/binaryPredict', methods=['GET', 'POST'] )
+def binaryPredict():
+    if request.method == 'GET':
+        # SSR 처리시 데이터를 전달할 수 있다.
+        return render_template('binaryPredict.html', title='koBert 기반 사전학습된 모델을 가져와서 데이터를 새로 주입하여 학습 후 가져온 모델-긍정/부정 예측을 수행하는 모델')
+    else:
+        # 사용자의 요청값을 획득 -> 예측함수에 인자로 넣어서 호출 -> 예측결과를 받아서 리턴(json)
+        res = {
+            'code':1,
+            'name':'고객센터',
+            'msg':nlp.get_text_binary_clf(request.form.get('msg'))[0][0]
+        }
+    return jsonify(res)
+
 if __name__ == '__main__':
     app.run(debug=True)
