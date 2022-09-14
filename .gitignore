@@ -127,3 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+chatbot_web_service/nlp/bert-base/tf_model.h5
